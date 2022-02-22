@@ -1,0 +1,64 @@
+{
+  "name": "latex-wordcount",
+  "displayName": "latex-wordcount",
+  "description": "Count the words by Texcount",
+  "publisher": "Yongke",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.64.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:latex",
+    "onLanguage:tex",
+    "onCommand:latex-wordcount.latex-wordcount"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "latex-wordcount.latex-wordcount",
+        "title": "latex-wordcount"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "latex-wordcount",
+        "properties": {
+          "latex-wordcount.label": {
+            "type": "string",
+            "default": "TexWords",
+            "description": "label will be shown before the number."
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.64.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "@vscode/test-electron": "^2.0.3",
+    "eslint": "^8.6.0",
+    "glob": "^7.2.0",
+    "mocha": "^9.1.3",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "memfs": "^3.4.1"
+  }
+}
