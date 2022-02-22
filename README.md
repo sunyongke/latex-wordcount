@@ -9,7 +9,7 @@ Southwest Forestry University, Kunming, Yunnan, China.
 
 Count the word by Texcount, exclude command, environment. Just count the words shown in the pdf file.
 
-\!\[latex-wordcount\]\(latex-wordcount.jpg\)
+![latex-wordcount](latex-wordcount.jpg)
 
 
 ## Requirements
