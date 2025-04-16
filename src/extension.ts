@@ -3,6 +3,8 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { execSync } from 'child_process';
+import path = require('path');
+import * as os from 'os';
 
 
 
@@ -18,6 +20,7 @@ declare global {
 	var  isShow:boolean;
 	var scrollTimer:any;
 	var timeout:number;
+	var tmpfile:any;
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -44,6 +47,8 @@ export function activate(context: vscode.ExtensionContext) {
 	myStatusBarItem.show();
 
 
+
+
 	// get configuration from vscode config
 	const key:string="latex-wordcount.label"
 	globalThis.label=vscode.workspace.getConfiguration().get(key);
@@ -58,6 +63,9 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 
 
+	// globalThis.tmpdir=os.tmpdir();
+	globalThis.tmpfile=path.join(os.tmpdir(),"_selection.tex")
+
 	globalThis.sel_words=0;
 	globalThis.doc_words=0;
 	
@@ -67,7 +75,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// detecte the language on openfile and changeTab
 	context.subscriptions.push(vscode.workspace.onDidOpenTextDocument(getDocWords));
-	context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(getDocWords));
+	// context.subscriptions.push(vscode.workspace.onDidChangeTextDocument(getDocWords));
 	// checkDocLanguage();
 	getDocWords();
 
@@ -87,22 +95,31 @@ function checkDocLanguage():void{
 
 function showItem():void{
 	let txt="";
-	if (globalThis.sel_words>0 && globalThis.doc_words>0){
-		txt=`${globalThis.label}：${globalThis.sel_words}/${globalThis.doc_words}`;
-	}else if(globalThis.sel_words<=0 && globalThis.doc_words>0){
-		txt=`${globalThis.label}：${globalThis.doc_words}`;
-	}
-	else if(globalThis.sel_words>0 &&  globalThis.doc_words<=0){
-		txt=`${globalThis.label}：${globalThis.sel_words}`;
-	}else{
-		txt='';
-	}
-	if (txt==''){
-		myStatusBarItem.hide()
-	}else{
-		myStatusBarItem.text=txt;
-		myStatusBarItem.show()
-	}
+	txt=`${globalThis.label}：${globalThis.sel_words}/${globalThis.doc_words}`;
+	// if (globalThis.doc_words=0){
+	// 	txt=`${globalThis.label}：0`;
+	// }
+
+
+	// if (globalThis.sel_words>0 && globalThis.doc_words>0){
+	// 	txt=`${globalThis.label}：${globalThis.sel_words}/${globalThis.doc_words}`;
+	// }else if(globalThis.sel_words<=0 && globalThis.doc_words>0){
+	// 	txt=`${globalThis.label}：${globalThis.doc_words}`;
+	// }
+	// else if(globalThis.sel_words>0 &&  globalThis.doc_words<=0){
+	// 	txt=`${globalThis.label}：${globalThis.sel_words}`;
+	// }else{
+	// 	txt=`${globalThis.label}：0`;
+	// }
+
+	// if (txt==''){
+	// 	myStatusBarItem.hide()
+	// }else{
+	// 	myStatusBarItem.text=txt;
+	// 	myStatusBarItem.show()
+	// }
+	myStatusBarItem.text=txt;
+	myStatusBarItem.show()
 	
 }
 
@@ -117,6 +134,7 @@ function getDocWords():void{
 	let editor=vscode.window.activeTextEditor;
 	let doc=editor?.document.fileName;
 	let cmdOutputBrief = 'texcount -brief -nosubs -sum  '+doc;
+
 	// Store output of texcount to a string
 	let reg=/(\d+):\s*File:.*/;
 	let texOut = execSync(cmdOutputBrief).toString();
@@ -131,6 +149,12 @@ function getDocWords():void{
 }
 
 function SelectionChange():void{
+	checkDocLanguage();
+	if (!globalThis.isShow){
+		myStatusBarItem.hide();
+		return
+	}
+
 	try{
 		clearTimeout(globalThis.scrollTimer);
 		globalThis.scrollTimer = setTimeout(getSelectionWords,globalThis.timeout);
@@ -144,10 +168,6 @@ function SelectionChange():void{
 
 
 function getSelectionWords():void{
-	console.log("----------------");
-	
-
-	console.log("================");
 	if (!globalThis.isShow){
 		myStatusBarItem.hide();
 		return
@@ -162,8 +182,11 @@ function getSelectionWords():void{
 	}
 	let text=editor.document.getText(Selection);
 	console.log(text);
-	fs.writeFileSync('__selection.tex',text,{'flag':'w+'});
-	let cmdOutputBrief = 'texcount -brief -nosubs -sum  __selection.tex';
+	globalThis.tmpfile
+	// fs.writeFileSync('__selection.tex',text,{'flag':'w+'});
+	// let cmdOutputBrief = 'texcount -brief -nosubs -sum  __selection.tex';
+	fs.writeFileSync(globalThis.tmpfile,text,{'flag':'w+'});
+	let cmdOutputBrief = 'texcount -brief -nosubs -sum  '+ globalThis.tmpfile;
 	// Store output of texcount to a string
 	let reg=/(\d+):\s*File:.*/;
 	let texOut = execSync(cmdOutputBrief).toString();
@@ -174,13 +197,6 @@ function getSelectionWords():void{
 			globalThis.sel_words=Number(_ws);
 			showItem();
 		}
-		// let regRet=reg.exec(texOut)
-		// if (regRet!=null){
-		// 	let words=regRet[1];
-		// 	globalThis.sel_words=Number(words);
-		// 	showItem();
-			
-		// }
 	}catch(error){
 		console.log(error);
 	}
@@ -188,4 +204,9 @@ function getSelectionWords():void{
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+	if (myStatusBarItem){
+		myStatusBarItem.hide();
+		myStatusBarItem.dispose();
+	}
+}
