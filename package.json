@@ -1,73 +1,78 @@
 {
   "name": "latex-wordcount",
-	"displayName": "latex-wordcount",
-	"description": "Count the tex words by TexCount.",
-	"version": "1.0.3",
-	"publisher": "Yongke",
-	"engines": {
-		"vscode": "^1.20.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onLanguage:latex",
-		"onLanguage:tex",
-        "onCommand:latex-wordcount.latex-wordcount"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "latex-wordcount.latex-wordcount",
-				"title": "Hello World"
-			}
-		],
-		"configuration": [
-			{
-			  "title": "latex-wordcount",
-			  "properties": {
-				"latex-wordcount.label": {
-				  "type": "string",
-				  "default": "TexWords",
-				  "description": "label will be shown before the number."
-				}
-			  }
-			},
-			{
-				"title": "latex-wordcount",
-				"properties": {
-				  "latex-wordcount.selectTimeOut": {
-					"type": "number",
-					"default": "500",
-					"description": "The Timeout for selection, The extension will count the words after this time, unit is millisecond."
-				  }
-				}
-			  }
-		  ]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile && npm run lint",
-		"lint": "eslint src --ext ts",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/vscode": "^1.20.0",
-		"@types/glob": "^7.2.0",
-		"@types/mocha": "^9.1.0",
-		"@types/node": "14.x",
-		"@typescript-eslint/eslint-plugin": "^5.12.1",
-		"@typescript-eslint/parser": "^5.12.1",
-		"eslint": "^8.9.0",
-		"glob": "^7.2.0",
-		"mocha": "^9.2.1",
-		"typescript": "^4.5.5",
-		"@vscode/test-electron": "^2.1.2"
-	},
-	"dependencies": {
-		"fs": "^0.0.1-security"
-	  }
+  "displayName": "latex-wordcount",
+  "description": "Count the tex words by TexCount.",
+  "version": "1.1.2",
+  "publisher": "Yongke",
+  "engines": {
+    "vscode": "^1.20.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:latex",
+    "onLanguage:tex"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "latex-wordcount.latex-wordcount",
+        "title": "Hello World"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "latex-wordcount",
+        "properties": {
+          "latex-wordcount.label": {
+            "type": "string",
+            "default": "TexWords",
+            "description": "label will be shown before the number."
+          }
+        }
+      },
+      {
+        "title": "latex-wordcount",
+        "properties": {
+          "latex-wordcount.selectTimeOut": {
+            "type": "number",
+            "default": "500",
+            "description": "The Timeout for selection, The extension will count the words after this time, unit is millisecond."
+          }
+        }
+      }
+    ]
+  },
+  "repository": {
+  "type": "git",
+  "url" : "https://github.com/sunyongke/latex-wordcount.git"
+},
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.0",
+    "@types/node": "14.x",
+    "@types/vscode": "^1.20.0",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "@vscode/test-electron": "^2.1.2",
+    "eslint": "^8.9.0",
+    "glob": "^7.2.0",
+    "mocha": "^11.1.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "fs": "^0.0.1-security",
+    "vsce": "^2.15.0"
+  }
 }

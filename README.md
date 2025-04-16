@@ -9,7 +9,6 @@ Southwest Forestry University, Kunming, Yunnan, China.
 
 Count the word by Texcount, exclude command, environment. Just count the words shown in the pdf file.
 
-
 ![latex-wordcount](https://raw.githubusercontent.com/sunyongke/latex-wordcount/main/latex-wordcount.jpg)
 
 
@@ -29,5 +28,8 @@ Calling out known issues can help limit users opening duplicate issues against y
 
 Users appreciate release notes as you update your extension.
 
-### 1.0.0
+### 1.1.0
+
+ 1. Disable entire document word count when text changing.
+ 2. Always show the "TexWords" in the statusBar.
 
